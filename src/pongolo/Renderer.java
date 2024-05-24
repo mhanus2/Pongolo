@@ -1,5 +1,6 @@
 package pongolo;
 
+import lwjglutils.OGLTextRenderer;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -20,9 +21,9 @@ public class Renderer extends AbstractRenderer {
 
     public Renderer() {
         super();
+        initCallBacks();
         ball = new Ball();
         paddle = new Paddle();
-        initCallBacks();
     }
 
     private void initCallBacks() {
@@ -44,7 +45,7 @@ public class Renderer extends AbstractRenderer {
                 double centerX = width / 2.0;
                 double centerY = height / 2.0;
                 double dx = x - centerX;
-                double dy = centerY - y; // Inverted Y coordinate for correct direction
+                double dy = centerY - y;
                 paddle.setAngle((float) Math.atan2(dy, dx));
             }
         };
@@ -85,14 +86,19 @@ public class Renderer extends AbstractRenderer {
     public void init() {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glEnable(GL_DEPTH_TEST);
+        textRenderer = new OGLTextRenderer(width, height);
+        textRenderer.setScale(2);
     }
 
     @Override
     public void display() {
+        if (gameOver) {
+            drawGameOverMessage();
+            return;
+        }
+
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        if (gameOver) return;
 
         paddle.updateAngle();
         ball.updatePosition();
@@ -131,6 +137,13 @@ public class Renderer extends AbstractRenderer {
         // Draw paddle
         glLoadIdentity();
         drawPaddle();
+
+        textRenderer.addStr2D(3, 30, "Score: " + score);
+    }
+
+    private void drawGameOverMessage() {
+        textRenderer.addStr2D((int) (width / 2.175), height / 2, "Score: " + score);
+        textRenderer.addStr2D((int) (width / 2.45), (int) (height / 1.75), "Press R to restart");
     }
 
     private void reset() {
