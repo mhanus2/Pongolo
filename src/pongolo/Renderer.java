@@ -17,6 +17,7 @@ public class Renderer extends AbstractRenderer {
         super();
         ball = new Ball(-0.1f, -0.25f, 0.01f, 0.01f, 0.2f);
         paddle = new Paddle(0.0f);
+        initCallBacks();
     }
 
     private void initCallBacks() {
@@ -67,6 +68,10 @@ public class Renderer extends AbstractRenderer {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         drawCircle();
+
+        // Draw ball
+        glLoadIdentity();
+        drawBall();
     }
 
     private void drawCircle() {
@@ -77,6 +82,19 @@ public class Renderer extends AbstractRenderer {
             float x = (float) Math.cos(theta) * 0.7f;
             float y = (float) Math.sin(theta) * 0.7f;
             glVertex2f(x, y);
+        }
+        glEnd();
+    }
+
+    private void drawBall() {
+        glBegin(GL_TRIANGLE_FAN);
+        glColor3f(1f, 1f, 1f);
+        glVertex2f(ball.getX(), ball.getY()); // Center of circle
+        for (int i = 0; i <= 20; i++) {
+            double angle = 2 * Math.PI * i / 20;
+            float dx = (float) Math.cos(angle) * 0.03f;
+            float dy = (float) Math.sin(angle) * 0.03f;
+            glVertex2f(ball.getX() + dx, ball.getY() + dy);
         }
         glEnd();
     }
