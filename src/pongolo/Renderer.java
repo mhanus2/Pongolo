@@ -17,7 +17,9 @@ public class Renderer extends AbstractRenderer {
         super();
         ball = new Ball(-0.1f, -0.25f, 0.01f, 0.01f, 0.2f);
         paddle = new Paddle(0.0f);
+    }
 
+    private void initCallBacks() {
         glfwWindowSizeCallback = new GLFWWindowSizeCallback() {
             @Override
             public void invoke(long window, int w, int h) {
@@ -50,7 +52,6 @@ public class Renderer extends AbstractRenderer {
                 //do nothing
             }
         };
-
     }
 
     @Override
