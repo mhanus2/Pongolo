@@ -15,6 +15,8 @@ public class Renderer extends AbstractRenderer {
     private final Paddle paddle;
     private final float radius = 0.7f;
     private final float gap = 0.05f; // Small gap between the paddle and the circle
+    private int score = 0;
+    private boolean gameOver = false;
 
     public Renderer() {
         super();
@@ -87,7 +89,32 @@ public class Renderer extends AbstractRenderer {
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        if (gameOver) return;
+
         paddle.updateAngle();
+        ball.updatePosition();
+
+        float angleToBall = ball.getAngleToBall();
+
+        float paddleAngleStart = paddle.getAngle();
+        float paddleAngleEnd = (paddleAngleStart + paddle.getWidth()) % (2 * (float) Math.PI);
+
+        boolean withinPaddle;
+        if (paddleAngleStart < paddleAngleEnd) {
+            withinPaddle = angleToBall > paddleAngleStart && angleToBall < paddleAngleEnd;
+        } else {
+            withinPaddle = angleToBall > paddleAngleStart || angleToBall < paddleAngleEnd;
+        }
+        
+        float distanceFromCenter = ball.getDistanceFromCenter();
+
+        if (withinPaddle && distanceFromCenter >= radius - gap - 0.05f && distanceFromCenter <= radius - gap) {
+            reflectBall();
+        }
+
+        if (distanceFromCenter >= radius - gap / 2) {
+            gameOver = true;
+        }
 
         // Draw the circular boundary
         glMatrixMode(GL_MODELVIEW);
@@ -101,6 +128,13 @@ public class Renderer extends AbstractRenderer {
         // Draw paddle
         glLoadIdentity();
         drawPaddle();
+    }
+
+    private void reflectBall() {
+        ball.reflect();
+        ball.increaseSpeed();
+        paddle.increaseSpeed();
+        score++;
     }
 
     private void drawCircle() {

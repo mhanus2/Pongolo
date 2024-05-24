@@ -4,7 +4,8 @@ public class Paddle {
     private float angle;
     private float rotationSpeed;
     private final float width = (float) Math.PI / 8;
-    private final float maxPaddleRotationSpeed = 0.02f;
+    private float maxPaddleRotationSpeed = 0.02f;
+    private final float speedIncrement = 0.0025f;
 
     public Paddle(float initialAngle) {
         this.angle = initialAngle;
@@ -43,5 +44,9 @@ public class Paddle {
 
     public float getWidth() {
         return width;
+    }
+
+    public void increaseSpeed() {
+        maxPaddleRotationSpeed += speedIncrement;
     }
 }
