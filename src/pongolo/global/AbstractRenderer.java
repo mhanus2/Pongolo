@@ -28,8 +28,8 @@ public abstract class AbstractRenderer {
     }
 
     public AbstractRenderer() {
-        this.width = 600;
-        this.height = 400;
+        this.width = 1000;
+        this.height = 800;
     }
 
     public void init() {
