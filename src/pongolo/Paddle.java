@@ -17,12 +17,20 @@ public class Paddle {
         if (angle >= 2 * Math.PI) angle -= (float) (2 * Math.PI);
     }
 
+    public float getRotationSpeed() {
+        return rotationSpeed;
+    }
+
     public void setRotationSpeed(float rotationSpeed) {
         this.rotationSpeed = rotationSpeed;
     }
 
     public float getAngle() {
         return angle;
+    }
+
+    public void setAngle(float angle) {
+        this.angle = angle;
     }
 
     public static float getWidth() {
