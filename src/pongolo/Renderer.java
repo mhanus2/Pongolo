@@ -11,12 +11,11 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Renderer extends AbstractRenderer {
 
-    private Ball ball;
-    private Paddle paddle;
+    private final Ball ball;
+    private final Paddle paddle;
     private final float radius = 0.7f;
     private final float gap = 0.05f; // Small gap between the paddle and the circle
-    private final float paddleAngleWidth = (float) Math.PI / 8; // Paddle covers 1/8th of the circle
-    private float maxPaddleRotationSpeed = 0.02f;
+
     public Renderer() {
         super();
         ball = new Ball(-0.1f, -0.25f, 0.01f, 0.01f, 0.2f);
@@ -62,16 +61,16 @@ public class Renderer extends AbstractRenderer {
                 if (action == GLFW_PRESS) {
                     switch (key) {
                         case GLFW_KEY_LEFT:
-                            paddle.setRotationSpeed(-maxPaddleRotationSpeed);
+                            paddle.moveLeft();
                             break;
                         case GLFW_KEY_RIGHT:
-                            paddle.setRotationSpeed(maxPaddleRotationSpeed);
+                            paddle.moveRight();
                             break;
                         default:
                             break;
                     }
                 } else if (action == GLFW_RELEASE) {
-                    paddle.setRotationSpeed(0.0f);
+                    paddle.stop();
                 }
             }
         };
@@ -101,9 +100,7 @@ public class Renderer extends AbstractRenderer {
 
         // Draw paddle
         glLoadIdentity();
-//        drawPaddle();
-        drawArc(paddle.getAngle(), paddle.getAngle() + paddleAngleWidth, radius - gap - 0.035f, radius - gap, 5);
-
+        drawPaddle();
     }
 
     private void drawCircle() {
@@ -123,34 +120,24 @@ public class Renderer extends AbstractRenderer {
         glColor3f(1f, 1f, 1f);
         glVertex2f(ball.getX(), ball.getY()); // Center of circle
         for (int i = 0; i <= 20; i++) {
-            double angle = 2 * Math.PI * i / 20;
-            float dx = (float) Math.cos(angle) * 0.03f;
-            float dy = (float) Math.sin(angle) * 0.03f;
+            double angle = 2.0f * Math.PI * i / 20;
+            float dx = (float) Math.cos(angle) * ball.getRadius();
+            float dy = (float) Math.sin(angle) * ball.getRadius();
             glVertex2f(ball.getX() + dx, ball.getY() + dy);
         }
         glEnd();
     }
 
     private void drawPaddle() {
+        float startAngle = paddle.getAngle();
+        float endAngle = paddle.getAngle() + paddle.getWidth();
+        float innerRadius = radius - gap - 0.035f;
+        float outerRadius = radius - gap;
+
         glBegin(GL_QUAD_STRIP);
         glColor3f(1f, 1f, 1f);
         for (int i = 0; i <= 5; i++) {
-            float angle = paddle.getAngle() + ((paddle.getAngle() + paddleAngleWidth) - paddle.getAngle()) * i / 5;
-            float xInner = (float) Math.cos(angle) * radius - gap - 0.035f;
-            float yInner = (float) Math.sin(angle) * radius - gap - 0.035f;
-            float xOuter = (float) Math.cos(angle) * radius - gap;
-            float yOuter = (float) Math.sin(angle) * radius - gap;
-            glVertex2f(xInner, yInner);
-            glVertex2f(xOuter, yOuter);
-        }
-        glEnd();
-    }
-
-    private void drawArc(float startAngle, float endAngle, float innerRadius, float outerRadius, int segments) {
-        glBegin(GL_QUAD_STRIP);
-        glColor3f(1f, 1f, 1f);
-        for (int i = 0; i <= segments; i++) {
-            float angle = startAngle + (endAngle - startAngle) * i / segments;
+            float angle = startAngle + (endAngle - startAngle) * i / 5;
             float xInner = (float) Math.cos(angle) * innerRadius;
             float yInner = (float) Math.sin(angle) * innerRadius;
             float xOuter = (float) Math.cos(angle) * outerRadius;

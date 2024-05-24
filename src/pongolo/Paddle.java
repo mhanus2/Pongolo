@@ -3,8 +3,8 @@ package pongolo;
 public class Paddle {
     private float angle;
     private float rotationSpeed;
-    private static final float WIDTH = (float) Math.PI / 8;
-    private static final float MAX_ROTATION_SPEED = 0.02f;
+    private final float width = (float) Math.PI / 8;
+    private final float maxPaddleRotationSpeed = 0.02f;
 
     public Paddle(float initialAngle) {
         this.angle = initialAngle;
@@ -21,8 +21,16 @@ public class Paddle {
         return rotationSpeed;
     }
 
-    public void setRotationSpeed(float rotationSpeed) {
-        this.rotationSpeed = rotationSpeed;
+    public void moveLeft() {
+        this.rotationSpeed = -maxPaddleRotationSpeed;
+    }
+
+    public void moveRight() {
+        this.rotationSpeed = maxPaddleRotationSpeed;
+    }
+
+    public void stop() {
+        this.rotationSpeed = 0.0f;
     }
 
     public float getAngle() {
@@ -33,11 +41,7 @@ public class Paddle {
         this.angle = angle;
     }
 
-    public static float getWidth() {
-        return WIDTH;
-    }
-
-    public static float getMaxRotationSpeed() {
-        return MAX_ROTATION_SPEED;
+    public float getWidth() {
+        return width;
     }
 }

@@ -4,7 +4,7 @@ public class Ball {
     private float x, y;
     private float dirX, dirY;
     private float speed;
-    private static final float RADIUS = 0.03f;
+    private final float radius = 0.03f;
 
     public Ball(float x, float y, float dirX, float dirY, float speed) {
         this.x = x;
@@ -33,8 +33,8 @@ public class Ball {
         return y;
     }
 
-    public static float getRadius() {
-        return RADIUS;
+    public float getRadius() {
+        return radius;
     }
 
     public void increaseSpeed(float increment) {
