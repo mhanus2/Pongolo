@@ -1,5 +1,7 @@
 package pongolo;
 
+import java.util.Random;
+
 public class Ball {
     private float x, y;
     private float dirX, dirY;
@@ -7,12 +9,13 @@ public class Ball {
     private final float radius = 0.03f;
     private final float speedIncrement = 0.075f;
 
-    public Ball(float x, float y, float dirX, float dirY, float speed) {
-        this.x = x;
-        this.y = y;
-        this.dirX = dirX;
-        this.dirY = dirY;
-        this.speed = speed;
+    public Ball() {
+        Random random = new Random();
+        this.x = 0.1f * (random.nextBoolean() ? 1 : -1);
+        this.y = -0.15f * (random.nextBoolean() ? 1 : -1);
+        this.dirX = random.nextBoolean() ? -0.01f : 0.01f;
+        this.dirY = random.nextBoolean() ? -0.01f : 0.01f;
+        this.speed = 0.2f;
     }
 
     public void updatePosition() {

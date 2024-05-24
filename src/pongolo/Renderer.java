@@ -11,8 +11,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Renderer extends AbstractRenderer {
 
-    private final Ball ball;
-    private final Paddle paddle;
+    private Ball ball;
+    private Paddle paddle;
     private final float radius = 0.7f;
     private final float gap = 0.05f; // Small gap between the paddle and the circle
     private int score = 0;
@@ -20,8 +20,8 @@ public class Renderer extends AbstractRenderer {
 
     public Renderer() {
         super();
-        ball = new Ball(-0.1f, -0.25f, 0.01f, 0.01f, 0.2f);
-        paddle = new Paddle(0.0f);
+        ball = new Ball();
+        paddle = new Paddle();
         initCallBacks();
     }
 
@@ -62,11 +62,14 @@ public class Renderer extends AbstractRenderer {
             public void invoke(long window, int key, int scancode, int action, int mods) {
                 if (action == GLFW_PRESS) {
                     switch (key) {
-                        case GLFW_KEY_LEFT:
+                        case GLFW_KEY_LEFT, GLFW_KEY_A:
                             paddle.moveLeft();
                             break;
-                        case GLFW_KEY_RIGHT:
+                        case GLFW_KEY_RIGHT, GLFW_KEY_D:
                             paddle.moveRight();
+                            break;
+                        case GLFW_KEY_R:
+                            reset();
                             break;
                         default:
                             break;
@@ -128,6 +131,13 @@ public class Renderer extends AbstractRenderer {
         // Draw paddle
         glLoadIdentity();
         drawPaddle();
+    }
+
+    private void reset() {
+        ball = new Ball();
+        paddle = new Paddle();
+        score = 0;
+        gameOver = false;
     }
 
     private void reflectBall() {

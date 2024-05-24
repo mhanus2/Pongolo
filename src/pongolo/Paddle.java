@@ -1,5 +1,7 @@
 package pongolo;
 
+import java.util.Random;
+
 public class Paddle {
     private float angle;
     private float rotationSpeed;
@@ -7,8 +9,9 @@ public class Paddle {
     private float maxPaddleRotationSpeed = 0.02f;
     private final float speedIncrement = 0.0025f;
 
-    public Paddle(float initialAngle) {
-        this.angle = initialAngle;
+    public Paddle() {
+        Random random = new Random();
+        this.angle = random.nextFloat() * (float) (2 * Math.PI);
         this.rotationSpeed = 0.0f;
     }
 
@@ -16,10 +19,6 @@ public class Paddle {
         angle += rotationSpeed;
         if (angle < 0) angle += (float) (2 * Math.PI);
         if (angle >= 2 * Math.PI) angle -= (float) (2 * Math.PI);
-    }
-
-    public float getRotationSpeed() {
-        return rotationSpeed;
     }
 
     public void moveLeft() {
