@@ -139,7 +139,8 @@ public class Renderer extends AbstractRenderer {
         drawPaddle();
 
         textRenderer.addStr2D(3, 30, "Score: " + score);
-        textRenderer.addStr2D(900, 790, "Martin Hanuš");
+        textRenderer.addStr2D(625, 30, "Controls: A, D | Left, Right | Mouse");
+        textRenderer.addStr2D(450, 790, "Kruhový Pong, Martin Hanuš, KPGR2, 25.05.2024");
     }
 
     private void drawGameOverMessage() {
