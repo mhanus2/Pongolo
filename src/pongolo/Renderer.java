@@ -14,11 +14,16 @@ public class Renderer extends AbstractRenderer {
 
     private Ball ball;
     private Paddle paddle;
-    private final float radius = 0.7f;
+    private final float radius = 0.7f; // Radius of a circle
     private final float gap = 0.05f; // Small gap between the paddle and the circle
     private int score = 0;
     private boolean gameOver = false;
+    private boolean showHelp = false;
 
+    /**
+     * Constructor for Renderer.
+     * Initializes the game components and sets up callbacks.
+     */
     public Renderer() {
         super();
         initCallBacks();
@@ -26,6 +31,9 @@ public class Renderer extends AbstractRenderer {
         paddle = new Paddle();
     }
 
+    /**
+     * Initializes the GLFW callbacks for window size, cursor position, scroll, and key inputs.
+     */
     private void initCallBacks() {
         glfwWindowSizeCallback = new GLFWWindowSizeCallback() {
             @Override
@@ -50,11 +58,10 @@ public class Renderer extends AbstractRenderer {
             }
         };
 
-
         glfwScrollCallback = new GLFWScrollCallback() {
             @Override
             public void invoke(long window, double dx, double dy) {
-                //do nothing
+                // Do nothing
             }
         };
 
@@ -72,6 +79,9 @@ public class Renderer extends AbstractRenderer {
                         case GLFW_KEY_R:
                             reset();
                             break;
+                        case GLFW_KEY_H:
+                            showHelp = !showHelp;
+                            break;
                         default:
                             break;
                     }
@@ -82,6 +92,10 @@ public class Renderer extends AbstractRenderer {
         };
     }
 
+    /**
+     * Initializes the OpenGL settings.
+     * Sets the clear color and enables depth testing.
+     */
     @Override
     public void init() {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -90,15 +104,24 @@ public class Renderer extends AbstractRenderer {
         textRenderer.setScale(2);
     }
 
+    /**
+     * The main display method for rendering the game.
+     * Clears the screen, updates the game state, and draws the game elements.
+     */
     @Override
     public void display() {
-        if (gameOver) {
-            drawGameOverMessage();
+        if (showHelp) {
+            drawHelpMessage();
             return;
         }
 
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        if (gameOver) {
+            drawGameOverMessage();
+            return;
+        }
 
         paddle.update();
         ball.update();
@@ -139,15 +162,35 @@ public class Renderer extends AbstractRenderer {
         drawPaddle();
 
         textRenderer.addStr2D(3, 30, "Score: " + score);
-        textRenderer.addStr2D(625, 30, "Controls: A, D | Left, Right | Mouse");
-        textRenderer.addStr2D(450, 790, "Kruhový Pong, Martin Hanuš, KPGR2, 25.05.2024");
+        textRenderer.addStr2D(800, 790, "Press H for help");
     }
 
+    /**
+     * Draws the help message on the screen.
+     */
+    private void drawHelpMessage() {
+        glViewport(0, 0, width, height);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        textRenderer.addStr2D(350, 300, "Kruhový Pong");
+        textRenderer.addStr2D(350, 350, "Author: Martin Hanuš");
+        textRenderer.addStr2D(350, 400, "KPGR2, 25.05.2024");
+        textRenderer.addStr2D(350, 450, "Controls: A, D | Left, Right | Mouse");
+        textRenderer.addStr2D(350, 500, "Press H to hide this help message");
+    }
+
+    /**
+     * Draws the game over message on the screen.
+     */
     private void drawGameOverMessage() {
         textRenderer.addStr2D((int) (width / 2.175), height / 2, "Score: " + score);
         textRenderer.addStr2D((int) (width / 2.45), (int) (height / 1.75), "Press R to restart");
     }
 
+    /**
+     * Resets the game to its initial state.
+     * Resets the ball, paddle, score, and game over flag.
+     */
     private void reset() {
         ball = new Ball();
         paddle = new Paddle();
@@ -155,6 +198,9 @@ public class Renderer extends AbstractRenderer {
         gameOver = false;
     }
 
+    /**
+     * Reflects the ball off the paddle, increases the speed of both the ball and the paddle, and increments the score.
+     */
     private void reflectBall() {
         ball.reflect();
         ball.increaseSpeed();
@@ -162,6 +208,9 @@ public class Renderer extends AbstractRenderer {
         score++;
     }
 
+    /**
+     * Draws the circular boundary of the game.
+     */
     private void drawCircle() {
         glBegin(GL_LINE_LOOP);
         glColor3f(1f, 1f, 1f);
@@ -174,6 +223,9 @@ public class Renderer extends AbstractRenderer {
         glEnd();
     }
 
+    /**
+     * Draws the ball on the screen.
+     */
     private void drawBall() {
         glBegin(GL_TRIANGLE_FAN);
         glColor3f(1f, 1f, 1f);
@@ -187,6 +239,9 @@ public class Renderer extends AbstractRenderer {
         glEnd();
     }
 
+    /**
+     * Draws the paddle on the screen.
+     */
     private void drawPaddle() {
         float startAngle = paddle.getAngle();
         float endAngle = paddle.getAngle() + paddle.getWidth();
