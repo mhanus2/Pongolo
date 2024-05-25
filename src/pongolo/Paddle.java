@@ -15,7 +15,7 @@ public class Paddle {
         this.rotationSpeed = 0.0f;
     }
 
-    public void updateAngle() {
+    public void update() {
         angle += rotationSpeed;
         if (angle < 0) angle += (float) (2 * Math.PI);
         if (angle >= 2 * Math.PI) angle -= (float) (2 * Math.PI);

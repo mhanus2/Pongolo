@@ -18,7 +18,7 @@ public class Ball {
         this.speed = 0.2f;
     }
 
-    public void updatePosition() {
+    public void update() {
         x += dirX * speed;
         y += dirY * speed;
     }

@@ -100,8 +100,8 @@ public class Renderer extends AbstractRenderer {
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        paddle.updateAngle();
-        ball.updatePosition();
+        paddle.update();
+        ball.update();
 
         float angleToBall = ball.getAngleToBall();
 
@@ -114,7 +114,7 @@ public class Renderer extends AbstractRenderer {
         } else {
             withinPaddle = angleToBall > paddleAngleStart || angleToBall < paddleAngleEnd;
         }
-        
+
         float distanceFromCenter = ball.getDistanceFromCenter();
 
         if (withinPaddle && distanceFromCenter >= radius - gap - 0.05f && distanceFromCenter <= radius - gap) {
@@ -139,6 +139,7 @@ public class Renderer extends AbstractRenderer {
         drawPaddle();
 
         textRenderer.addStr2D(3, 30, "Score: " + score);
+        textRenderer.addStr2D(900, 790, "Martin Hanuš");
     }
 
     private void drawGameOverMessage() {
